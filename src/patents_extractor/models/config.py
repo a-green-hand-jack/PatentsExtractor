@@ -3,7 +3,11 @@
 from dataclasses import dataclass
 from typing import Dict, Any, Optional
 import logging
+from dotenv import load_dotenv
+import os
 
+# 加载 .env 文件中的环境变量
+load_dotenv()
 
 logger = logging.getLogger(__name__)
 
@@ -30,9 +34,13 @@ class ModelConfig:
     # 多模态模型
     multimodal_model: str = "qwen-vl-max"
     
+    # API基础URL
+    api_base: str = os.getenv("QWEN_BASE_URL")
+    
+    # API密钥
+    api_key: str = os.getenv("QWEN_API_KEY")
+    
     # API配置
-    api_base: str = "https://dashscope.aliyuncs.com/compatible-mode/v1"
-    api_key: Optional[str] = None
     temperature: float = 0.1
     max_tokens: int = 4000
     

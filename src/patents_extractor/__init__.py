@@ -17,6 +17,7 @@ from .agents.structured_node import StructuredAgentNode
 from .agents.qa_node import QAAgentNode
 from .agents.output_node import OutputAgentNode
 from .agents.ocr_node import OCRAgentNode
+from .agents.patent_localization_agent import PatentLocalizationAgent
 
 __all__ = [
     "PatentExtractor",
@@ -31,4 +32,5 @@ __all__ = [
     "QAAgentNode",
     "OutputAgentNode",
     "OCRAgentNode",
+    "PatentLocalizationAgent",
 ]
