@@ -5,6 +5,7 @@ from typing import Optional, Dict, Any
 
 from .workflow import PatentExtractionWorkflow
 from ..models.patent import PatentQuery, PatentResult
+from ..models.config import ModelConfig
 
 
 logger = logging.getLogger(__name__)
@@ -16,14 +17,14 @@ class PatentExtractor:
     使用LangGraph工作流协调多个Agent完成专利信息的提取、问答和格式化输出。
     """
     
-    def __init__(self, model_name: str = "gpt-4") -> None:
+    def __init__(self, model_config: ModelConfig = None) -> None:
         """初始化提取器。
         
         Args:
-            model_name: 使用的语言模型名称
+            model_config: 模型配置，如果为None则使用默认配置
         """
-        self.workflow = PatentExtractionWorkflow(model_name)
-        logger.info(f"专利提取器初始化完成，使用模型: {model_name}")
+        self.workflow = PatentExtractionWorkflow(model_config)
+        logger.info("专利提取器初始化完成")
     
     def extract(self, query: PatentQuery) -> PatentResult:
         """执行专利信息提取。

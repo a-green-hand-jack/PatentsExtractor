@@ -6,6 +6,7 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
 
 from ..models.state import PatentExtractionState
+from ..models.config import ModelManager
 
 
 logger = logging.getLogger(__name__)
@@ -17,14 +18,25 @@ class QAAgentNode:
     负责基于结构化内容回答用户问题。
     """
     
-    def __init__(self, model_name: str = "gpt-4"):
+    def __init__(self, model_manager: ModelManager):
         """初始化问答Agent节点。
         
         Args:
-            model_name: 使用的模型名称
+            model_manager: 模型管理器
         """
-        self.model = ChatOpenAI(model=model_name, temperature=0.1)
-        logger.info(f"问答Agent节点初始化完成，使用模型: {model_name}")
+        self.model_manager = model_manager
+        
+        # 使用文本处理模型
+        text_config = model_manager.get_text_model_config()
+        self.model = ChatOpenAI(
+            model=text_config["model"],
+            openai_api_base=text_config["api_base"],
+            openai_api_key=text_config["api_key"],
+            temperature=text_config["temperature"],
+            max_tokens=text_config["max_tokens"]
+        )
+        
+        logger.info(f"问答Agent节点初始化完成，使用模型: {text_config['model']}")
     
     def process(self, state: PatentExtractionState) -> PatentExtractionState:
         """处理问答任务。
@@ -65,7 +77,7 @@ class QAAgentNode:
             state["confidence_score"] = confidence_score
             state["relevant_sections"] = relevant_sections
             state["source_citations"] = [state["structured_content"].get("publication_number", "")]
-            state["model_used"] = self.model.model_name
+            state["model_used"] = self.model_manager.config.text_model
             state["next_step"] = "output_formatting"
             
             logger.info("问答处理完成")

@@ -12,9 +12,11 @@ from .core.extractor import PatentExtractor
 from .core.workflow import PatentExtractionWorkflow
 from .models.patent import PatentDocument, PatentQuery, PatentResult
 from .models.state import PatentExtractionState
+from .models.config import ModelConfig, ModelManager
 from .agents.structured_node import StructuredAgentNode
 from .agents.qa_node import QAAgentNode
 from .agents.output_node import OutputAgentNode
+from .agents.ocr_node import OCRAgentNode
 
 __all__ = [
     "PatentExtractor",
@@ -23,7 +25,10 @@ __all__ = [
     "PatentQuery", 
     "PatentResult",
     "PatentExtractionState",
+    "ModelConfig",
+    "ModelManager",
     "StructuredAgentNode",
     "QAAgentNode",
     "OutputAgentNode",
+    "OCRAgentNode",
 ]

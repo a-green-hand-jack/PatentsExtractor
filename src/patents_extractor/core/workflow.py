@@ -7,6 +7,7 @@ from langgraph.graph import StateGraph, END
 from langgraph.checkpoint.memory import MemorySaver
 
 from ..models.state import PatentExtractionState
+from ..models.config import ModelManager, ModelConfig
 from .structured_node import StructuredAgentNode
 from .qa_node import QAAgentNode
 from .output_node import OutputAgentNode
@@ -21,23 +22,25 @@ class PatentExtractionWorkflow:
     使用LangGraph构建的多Agent工作流，协调各个Agent节点完成专利信息提取任务。
     """
     
-    def __init__(self, model_name: str = "gpt-4"):
+    def __init__(self, model_config: ModelConfig = None):
         """初始化工作流。
         
         Args:
-            model_name: 使用的语言模型名称
+            model_config: 模型配置，如果为None则使用默认配置
         """
-        self.model_name = model_name
+        # 初始化模型管理器
+        self.model_manager = ModelManager(model_config)
         
         # 初始化各个Agent节点
-        self.structured_node = StructuredAgentNode()
-        self.qa_node = QAAgentNode(model_name)
+        self.structured_node = StructuredAgentNode(self.model_manager)
+        self.qa_node = QAAgentNode(self.model_manager)
         self.output_node = OutputAgentNode()
         
         # 构建工作流图
         self.graph = self._build_graph()
         
-        logger.info(f"专利提取工作流初始化完成，使用模型: {model_name}")
+        logger.info("专利提取工作流初始化完成")
+        logger.info(f"使用的模型: {self.model_manager.get_model_info()}")
     
     def _build_graph(self) -> StateGraph:
         """构建工作流图。
