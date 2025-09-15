@@ -5,6 +5,7 @@ import logging
 from typing import Dict, Any
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, Template
+from langgraph.graph import END
 
 from ..models.state import PatentExtractionState
 
@@ -108,8 +109,21 @@ class OutputAgentNode:
         else:
             template = self.jinja_env.get_template("default_json.json")
         
-        formatted_data = template.render(**state)
-        return json.dumps(json.loads(formatted_data), ensure_ascii=False, indent=2)
+        # 直接构建JSON，避免模板解析问题
+        json_data = {
+            "question": state.get("question", ""),
+            "answer": state.get("answer", ""),
+            "confidence_score": state.get("confidence_score", 0.0),
+            "relevant_sections": state.get("relevant_sections", []),
+            "source_citations": state.get("source_citations", []),
+            "processing_time": state.get("processing_time", 0.0),
+            "model_used": state.get("model_used", ""),
+            "tokens_used": state.get("tokens_used", 0),
+            "extracted_images": state.get("extracted_images", []),
+            "image_descriptions": state.get("image_descriptions", [])
+        }
+        
+        return json.dumps(json_data, ensure_ascii=False, indent=2)
     
     def _load_custom_template(self, template_path: str) -> Template:
         """加载自定义模板。

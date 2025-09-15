@@ -4,6 +4,7 @@ import logging
 from typing import Dict, Any
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
+from langgraph.graph import END
 
 from ..models.state import PatentExtractionState
 from ..models.config import ModelManager

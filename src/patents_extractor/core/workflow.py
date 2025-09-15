@@ -8,9 +8,9 @@ from langgraph.checkpoint.memory import MemorySaver
 
 from ..models.state import PatentExtractionState
 from ..models.config import ModelManager, ModelConfig
-from .structured_node import StructuredAgentNode
-from .qa_node import QAAgentNode
-from .output_node import OutputAgentNode
+from ..agents.structured_node import StructuredAgentNode
+from ..agents.qa_node import QAAgentNode
+from ..agents.output_node import OutputAgentNode
 
 
 logger = logging.getLogger(__name__)
@@ -62,11 +62,6 @@ class PatentExtractionWorkflow:
         workflow.add_edge("structured_processing", "qa_processing")
         workflow.add_edge("qa_processing", "output_formatting")
         workflow.add_edge("output_formatting", END)
-        
-        # 添加错误处理
-        workflow.add_edge("structured_processing", END, condition=self._has_error)
-        workflow.add_edge("qa_processing", END, condition=self._has_error)
-        workflow.add_edge("output_formatting", END, condition=self._has_error)
         
         # 编译图
         return workflow.compile(checkpointer=MemorySaver())
@@ -140,7 +135,7 @@ class PatentExtractionWorkflow:
                 "json_output": final_state.get("json_output", ""),
                 "processing_time": processing_time,
                 "tokens_used": final_state.get("tokens_used", 0),
-                "model_used": final_state.get("model_used", self.model_name),
+                "model_used": final_state.get("model_used", self.model_manager.config.text_model),
                 "relevant_sections": final_state.get("relevant_sections", []),
                 "source_citations": final_state.get("source_citations", []),
                 "extracted_images": final_state.get("extracted_images", []),
@@ -161,7 +156,7 @@ class PatentExtractionWorkflow:
                 "json_output": "",
                 "processing_time": time.time() - start_time,
                 "tokens_used": 0,
-                "model_used": self.model_name,
+                "model_used": self.model_manager.config.text_model,
                 "relevant_sections": [],
                 "source_citations": [],
                 "extracted_images": [],

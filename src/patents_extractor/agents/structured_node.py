@@ -56,7 +56,8 @@ class StructuredAgentNode:
             elif self._is_pdf_file(state["input_source"]):
                 structured_content = self._process_pdf(state["input_source"])
             else:
-                raise ValueError(f"不支持的输入类型: {state['input_source']}")
+                # 处理纯文本输入
+                structured_content = self._process_text(state["input_source"])
             
             # 处理图片OCR
             if structured_content.get("drawings"):
@@ -100,22 +101,29 @@ class StructuredAgentNode:
         logger.info(f"处理PDF文件: {pdf_path}")
         return self.pdf_processor.extract_content(pdf_path)
     
-    def _process_images_ocr(self, images: list) -> list[str]:
-        """处理图片OCR。
+    def _process_text(self, text: str) -> Dict[str, Any]:
+        """处理纯文本输入。
         
         Args:
-            images: 图片列表
+            text: 纯文本内容
             
         Returns:
-            OCR识别结果列表
+            结构化的文本内容字典
         """
-        if not images:
-            return []
+        logger.info(f"处理纯文本内容，长度: {len(text)}")
         
-        # 判断图片类型
-        if isinstance(images[0], dict):
-            # PDF图片数据
-            return self.ocr_agent.extract_text_from_pdf_images(images)
-        else:
-            # 普通图片路径
-            return self.ocr_agent.process_images(images)
+        # 简单的文本结构化处理
+        structured_content = {
+            "title": "文本输入",
+            "abstract": text[:200] + "..." if len(text) > 200 else text,
+            "inventors": [],
+            "assignee": "",
+            "publication_number": "",
+            "description": text,
+            "claims": "",
+            "drawings": [],
+            "raw_text": text,
+            "source_type": "text"
+        }
+        
+        return structured_content

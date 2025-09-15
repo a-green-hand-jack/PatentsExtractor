@@ -16,22 +16,22 @@ class ModelConfig:
     """
     
     # 文本处理模型
-    text_model: str = "qwen3-max-preview-latest"
+    text_model: str = "qwen-max"
     
     # OCR模型
-    ocr_model: str = "qwen-vl-ocr-latest"
+    ocr_model: str = "qwen-vl-max"
     
     # 代码生成模型
-    coder_model: str = "qwen3-coder-plus-latest"
+    coder_model: str = "qwen-plus"
     
     # 视觉模型
-    vision_model: str = "qwen-vl-max-latest"
+    vision_model: str = "qwen-vl-max"
     
     # 多模态模型
-    multimodal_model: str = "qvq-max-latest"
+    multimodal_model: str = "qwen-vl-max"
     
     # API配置
-    api_base: str = "https://api.openai.com/v1"
+    api_base: str = "https://dashscope.aliyuncs.com/compatible-mode/v1"
     api_key: Optional[str] = None
     temperature: float = 0.1
     max_tokens: int = 4000
