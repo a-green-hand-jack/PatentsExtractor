@@ -3,14 +3,18 @@
 import os
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage
+from dotenv import load_dotenv
 
+# 加载 .env 文件中的环境变量
+load_dotenv()
 
 def test_qwen_models():
     """测试不同的Qwen模型名称。"""
     
-    api_key = "sk-8281934e464f4e90a04dacc1ac444b4f"
-    api_base = "https://dashscope.aliyuncs.com/compatible-mode/v1"
-    
+    # api_key = "sk-8281934e464f4e90a04dacc1ac444b4f"
+    api_key = os.getenv('QWEN_API_KEY') 
+    # api_base = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    api_base = os.getenv('QWEN_BASE_URL') 
     # 常见的Qwen模型名称
     model_names = [
         "qwen-max",
