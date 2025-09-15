@@ -4,12 +4,14 @@
 
 ## 功能特性
 
-- **多Agent系统架构**: 结构化Agent、问答Agent、输出Agent协同工作
+- **LangGraph工作流**: 使用LangGraph构建的多Agent系统，支持状态管理和错误处理
+- **多Agent协作**: 结构化Agent、问答Agent、输出Agent协同工作
 - **多模态处理**: 同时处理文本和图片内容
 - **灵活输入**: 支持PDF文件和专利网页链接
 - **智能问答**: 通过多轮对话完善问题描述
 - **双格式输出**: 提供Markdown和JSON两种格式，确保内容一致性
 - **模板系统**: 支持内置模板和用户自定义模板
+- **工作流状态管理**: 实时跟踪处理进度和状态
 
 ## 快速开始
 
@@ -73,9 +75,9 @@ PatentsExtractor/
 ## 技术栈
 
 - **Python 3.9+**: 主要编程语言
-- **LangGraph**: 多Agent系统框架
-- **Qwen2.5-VL**: 多模态模型
-- **Qwen2.5-Max**: 语言模型
+- **LangGraph**: 多Agent系统框架，用于构建工作流
+- **LangChain**: 语言模型应用框架
+- **OpenAI GPT-4**: 语言模型（可配置为Qwen2.5-Max）
 - **Chroma**: 向量数据库
 - **BeautifulSoup**: 网页解析
 - **PyMuPDF**: PDF处理

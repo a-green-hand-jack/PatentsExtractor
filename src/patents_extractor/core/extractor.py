@@ -1,13 +1,10 @@
 """专利信息提取器核心模块。"""
 
 import logging
-from typing import Optional
-from pathlib import Path
+from typing import Optional, Dict, Any
 
-from .models.patent import PatentDocument, PatentQuery, PatentResult
-from .agents.structured_agent import StructuredAgent
-from .agents.qa_agent import QAAgent
-from .agents.output_agent import OutputAgent
+from .workflow import PatentExtractionWorkflow
+from ..models.patent import PatentQuery, PatentResult
 
 
 logger = logging.getLogger(__name__)
@@ -16,16 +13,17 @@ logger = logging.getLogger(__name__)
 class PatentExtractor:
     """专利信息提取器主类。
     
-    协调多个Agent完成专利信息的提取、问答和格式化输出。
+    使用LangGraph工作流协调多个Agent完成专利信息的提取、问答和格式化输出。
     """
     
-    def __init__(self) -> None:
-        """初始化提取器。"""
-        self.structured_agent = StructuredAgent()
-        self.qa_agent = QAAgent()
-        self.output_agent = OutputAgent()
+    def __init__(self, model_name: str = "gpt-4") -> None:
+        """初始化提取器。
         
-        logger.info("专利提取器初始化完成")
+        Args:
+            model_name: 使用的语言模型名称
+        """
+        self.workflow = PatentExtractionWorkflow(model_name)
+        logger.info(f"专利提取器初始化完成，使用模型: {model_name}")
     
     def extract(self, query: PatentQuery) -> PatentResult:
         """执行专利信息提取。
@@ -39,24 +37,31 @@ class PatentExtractor:
         logger.info(f"开始处理专利查询: {query.question}")
         
         try:
-            # 第一步：结构化处理
-            logger.info("执行结构化处理...")
-            patent_doc = self.structured_agent.process(query.input_source)
+            # 使用工作流执行提取
+            result = self.workflow.extract(
+                input_source=query.input_source,
+                question=query.question,
+                output_format=query.output_format,
+                template_path=query.template_path
+            )
             
-            # 第二步：问答处理
-            logger.info("执行问答处理...")
-            answer_result = self.qa_agent.answer(patent_doc, query.question)
-            
-            # 第三步：格式化输出
-            logger.info("执行格式化输出...")
-            result = self.output_agent.format_output(
-                answer_result, 
-                query.output_format,
-                query.template_path
+            # 转换为PatentResult对象
+            patent_result = PatentResult(
+                answer=result["answer"],
+                confidence_score=result["confidence_score"],
+                markdown_output=result["markdown_output"],
+                json_output=result["json_output"],
+                processing_time=result["processing_time"],
+                tokens_used=result["tokens_used"],
+                model_used=result["model_used"],
+                relevant_sections=result["relevant_sections"],
+                source_citations=result["source_citations"],
+                extracted_images=result["extracted_images"],
+                image_descriptions=result["image_descriptions"]
             )
             
             logger.info("专利信息提取完成")
-            return result
+            return patent_result
             
         except Exception as e:
             logger.error(f"专利信息提取失败: {e}")
@@ -79,3 +84,14 @@ class PatentExtractor:
         # 3. 生成最终结果
         
         return self.extract(query)
+    
+    def get_workflow_status(self, thread_id: str = "patent_extraction_session") -> Dict[str, Any]:
+        """获取工作流状态。
+        
+        Args:
+            thread_id: 线程ID
+            
+        Returns:
+            工作流状态信息
+        """
+        return self.workflow.get_workflow_status(thread_id)

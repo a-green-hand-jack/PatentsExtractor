@@ -1,7 +1,7 @@
-"""Agent实现模块。"""
+"""基于LangGraph的Agent节点模块。"""
 
-from .structured_agent import StructuredAgent
-from .qa_agent import QAAgent
-from .output_agent import OutputAgent
+from .structured_node import StructuredAgentNode
+from .qa_node import QAAgentNode
+from .output_node import OutputAgentNode
 
-__all__ = ["StructuredAgent", "QAAgent", "OutputAgent"]
+__all__ = ["StructuredAgentNode", "QAAgentNode", "OutputAgentNode"]
