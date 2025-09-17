@@ -1,6 +1,11 @@
-"""核心业务逻辑模块。"""
+"""核心业务逻辑模块。
 
-from .extractor import PatentExtractor
-from .workflow import PatentExtractionWorkflow
+包含专利本地化、结构化处理等核心功能。
+"""
 
-__all__ = ["PatentExtractor", "PatentExtractionWorkflow"]
+from .localization_agent import PatentLocalizationAgent
+
+__all__ = [
+    "PatentLocalizationAgent",
+]
+
