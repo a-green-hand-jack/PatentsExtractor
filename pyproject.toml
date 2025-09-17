@@ -5,9 +5,9 @@ build-backend = "hatchling.build"
 [project]
 name = "patents-extractor"
 version = "0.1.0"
-description = "一个基于多Agent系统的专利信息智能提取工具"
+description = "一个将专利 PDF 文件高效解析为包含文本、图表、表格等内容的结构化、便于大语言模型处理的工具。"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [
     {name = "jieke wu", email = "jieke.jack.wu@gmail.com"},
@@ -18,37 +18,20 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
 ]
     
 dependencies = [
-    "langgraph>=0.2.0",
-    "langchain>=0.3.0",
-    "langchain-community>=0.3.0",
-    "langchain-core>=0.3.0",
-    "langchain-openai>=0.2.0",
-    "beautifulsoup4>=4.12.0",
-    "requests>=2.31.0",
-    "pymupdf>=1.23.0",
-    "chromadb>=0.4.0",
-    "jinja2>=3.1.0",
-    "pydantic>=2.0.0",
-    "pathlib>=1.0.0",
-    "typing-extensions>=4.0.0",
-    "click>=8.0.0",
+    "torch>=2.0.0",
+    "torchvision",
+    "torchaudio",
+    "marker-pdf>=1.9.0",
+    "ocrmypdf>=16.0.0",
     "rich>=13.0.0",
     "python-dotenv>=1.0.0",
-    "openai>=1.0.0",
-    # 新增专利本地化相关依赖
-    "markitdown[all]>=0.1.0",  # Microsoft MarkItDown - 支持多种格式转换
-    "aiohttp>=3.8.0",         # 异步HTTP客户端
-    "aiofiles>=23.0.0",        # 异步文件操作
-    "playwright>=1.40.0",      # 浏览器自动化
-    "lxml>=4.9.0",            # XML/HTML解析
-    "urllib3>=2.0.0",         # URL处理
+    "click>=8.0.0",
 ]
 
 [project.optional-dependencies]
